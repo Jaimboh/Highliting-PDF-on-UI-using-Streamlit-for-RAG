@@ -1,0 +1,11 @@
+langchain
+langchain_community
+langchain_core
+langchain_text_splitters
+pandas
+streamlit
+langchain-groq
+faiss-cpu
+PyMuPDF
+python-magic-bin
+streamlit_pdf_viewer==0.0.4
