@@ -13,6 +13,10 @@ from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(Path(".") / ".env")
 
 # Set page config
 st.set_page_config(page_title="📚 ChatPDF")
@@ -27,7 +31,7 @@ st.subheader("Upload a document to get started.")
 # Custom function to extract document objects from uploaded file
 def extract_documents_from_file(uploaded_file):
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        temp_file.write(uploaded_file.read())
+        temp_file.write(uploaded_file)
     
     loader = PyPDFLoader(temp_file.name)
     documents = loader.load()
@@ -64,10 +68,10 @@ def get_embeddings():
 
 
 @st.cache_resource
-def setup_qa_system(documents):
+def setup_qa_system(_documents):
     try:
         text_splitter = CharacterTextSplitter(chunk_size=512, chunk_overlap=0)
-        text_chunks = text_splitter.split_documents(documents)
+        text_chunks = text_splitter.split_documents(_documents)
 
         vector_store = FAISS.from_documents(text_chunks, get_embeddings())
         retriever = vector_store.as_retriever(
